@@ -1,12 +1,27 @@
 import base64
 from PIL import Image
 from io import BytesIO
+import json
 
-base64_image_string = 'iVBORw0KGgoAAAANSUhEUgAAAQgAAAD1AQAAAACE9lYhAAADaklEQVR4nNWZTZLTMBCFnzSpSRYUkyW7mSOwZBcfJSdhzA04AkdxcQKOIFixFFWz8FCOm4Ul619tysEVehOX9fn1U7esJDaQxCOl54J4IGqrwCMRdYwCkaoAJyIi6jmARgBA9zbvgYiIAGCv02zCAtROuAYA6REf56MGwBMQpyEXCsAzxYV59IgB2FvSZTl79B1wAIBj3uY0mQdbmFnjPp08sPOJd8FQO2dzxBm58CYT2qB28kHKacjw2sZM4+hGdiHx5A4tERrF0TAHRyRGGwDAPSCM0TEcfz2Y5SysRmQUO3MlWjv0JiKku8QcvY8IYefW2DNUCmU07uKZzHE0RGzDxcEQxyKxM8S5SJiKxfXygqZ5Z9eXDQkAH2o5BADUtpRPEnP3KlmqNiCRrJ4wGol6NQBRrQaAX5KzAWnu4WIcZK1tVuNcJ0S9osCrZCqKnUxuhIwPltgxgGTKAUiuHEL6W0VBg4slRLNaQzBtWeSDadwiDRa5SsWY5l+rL5sQ3DK9TpbjJlmeVmvQgizN6iz/ESG4G/tyK05vhmhvwsdwM/XobsQHB/RS3YQPLfUGWdRV5lL5pwoA6DbapfaMESGHLXzI6s/oJRrEEiMktyezGsMmK7lfpNGuzKI3mYuCRPfPs3SLNNRqH+ETmjQACb06y3WI6p1NN/LtMQIS3BazOsuwTIPbhBiNflmWlf/49BXqoQAJbgPZbH10leFuoYaqEwJ40NXhehYCR4wTwXydLppL5XYYlmowS7muYZ4WMwtVoraENJtFGaJjs5TDXlvelXkNS+jS4F9oFNs/WqLY3GF5lmJz++UaxebqWaMtEIrN0s1Hp0pbJg2Vl/AInSd+O6J610mgWPbeEYXQjiiUXTmiUNTOO34ul8P46OLLAeDiEypHDD6Rjd4ndJkzRLao2ieyRTXmpoeS2cfjwtfIlcyeM3NpU2IMiS4lhpBQKdGHxM+U0CGRme4X81l4l+RGyn25ICTSggwRkT537mNCxcS32E/yx29+imw14unORmfiEhEvCRH37nPsK966c0tqH70OSy2Hdfeeh88+gqr6vl1ffKsvyMWp7hPmZWvi07d0N2ROBj6cu+/5JG4TiZabt8Y68/m1JGGrGq9YT+N1+vhRlDDNq/7WEETmTXkhC0i02YURyqjk1B8Ef898jnkdwwAAAABJRU5ErkJggg=='
+# 创建一个1080*1440的纯黑色画布
+canvas = Image.new('RGB', (2448, 3264), (0, 0, 0))
 
+# 打开并读取JSON文件
+with open('1038.json', 'r') as file:
+    data = json.load(file)
+
+# 获取'imageData'项的内容
+base64_image_string = data['shapes'][0]['mask']
+
+position = data['shapes'][0]['points'][0]
+# base64_image_string = ''
 
 image_data = base64.b64decode(base64_image_string)
 
 image = Image.open(BytesIO(image_data))
 
-image.save('output_image2024.png')
+# 将1.jpg放置在指定的(480, 640)坐标位置上
+canvas.paste(image, (int(position[0]), int(position[1])))
+
+# 保存合成后的图片为predict.jpg
+canvas.save('predict.jpg')
