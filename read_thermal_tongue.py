@@ -8,7 +8,7 @@ from PIL import Image
 fir = FlirImageExtractor(palettes=[0], is_debug=True)
 
 # 处理FLIR图片文件
-fir.process_image('./data/sample.jpg')
+fir.process_image('7.JPG')
 
 # 获取温度数据
 temperature_array = fir.get_thermal_np()
@@ -21,7 +21,7 @@ print(f"Image Resolution: {width} x {height}")
 df = pd.DataFrame(temperature_array)
 
 # 将DataFrame保存到CSV文件
-df.to_csv('./data/tongue_temperature.csv', index=False)
+df.to_csv('tongue_temperature.csv', index=False)
 
 image = Image.open('data/sample.jpg')
 # 获取图像的分辨率
